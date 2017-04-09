@@ -19,11 +19,25 @@ class PyBind11TestConan(ConanFile):
     settings = ('os', 'compiler', 'build_type', 'arch')
     generators = ('cmake', 'txt', 'env')
 
+    options = {
+        'python_exec_path': 'ANY',
+    }
+    default_options = (
+        'python_exec_path=None',
+    )
+
     def build(self):
+        extra_opts = []
+        if self.options.python_exec_path:
+            extra_opts.append('-DPYTHON_EXECUTABLE:FILEPATH="{}"'.format(
+                self.options.python_exec_path,
+            ))
+
         cmake = CMake(self.settings)
-        self.run('cmake "{src_dir}" {opts}'.format(
+        self.run('cmake "{src_dir}" {opts} {extra_opts}'.format(
             src_dir=self.conanfile_directory,
             opts=cmake.command_line,
+            extra_opts=' '.join(extra_opts),
         ))
         self.run('cmake --build . {}'.format(cmake.build_config))
 
