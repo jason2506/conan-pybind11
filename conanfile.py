@@ -15,9 +15,10 @@ class PyBind11Conan(ConanFile):
     generators = ('cmake', 'txt', 'env')
     build_policy = 'always'
     options = {
-        'version': [
+        'version': (
+            '2.1.1', '2.1.0',
             '2.0.1', '2.0.0',
-        ],
+        ),
     }
     default_options = (
         'version={last_version}'.format(last_version=options['version'][0]),
